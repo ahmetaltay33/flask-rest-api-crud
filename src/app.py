@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, abort
 import json
 
 app = Flask(__name__)
@@ -24,20 +24,23 @@ def home():
 
 @app.route('/api/v1/records', methods=['GET'])
 def get_all():
-    return jsonify(records)
+    if len(records) > 0:
+        return jsonify(records)
+    return Response(204)
 
 @app.route('/api/v1/records/<int:id>', methods=['GET'])
 def get(id):
     for rec in records:
         if rec['id'] == id:
             return jsonify(rec)
+    return Response(status=204)
 
 @app.route('/api/v1/records', methods=['POST'])
 def post():
     data = request.data
     content = json.loads(data)
     records.append(content)
-    return Response(response=content, status=200, mimetype='application/json')
+    return jsonify(content)
 
 @app.route('/api/v1/records/<int:id>', methods=['PUT'])
 def put(id):
@@ -52,7 +55,7 @@ def put(id):
             break
     if found:
         return Response(status=200)
-    return Response(status=404)
+    return abort(404)
 
 @app.route('/api/v1/records/<int:id>', methods=['DELETE'])
 def delete(id):
@@ -64,7 +67,7 @@ def delete(id):
             break
     if found:
         return Response(status=200)
-    return Response(status=404)
+    return abort(404)
 
 @app.route('/api/v1/image', methods=['POST'])
 def postImage():
