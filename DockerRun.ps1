@@ -1,0 +1,1 @@
+docker run -d -p 89:5000 --name flask-api --env TZ=UTC --restart always ahmetaltay/flask-rest-api:latest

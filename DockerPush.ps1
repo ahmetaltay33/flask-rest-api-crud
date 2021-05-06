@@ -1,0 +1,1 @@
+docker push ahmetaltay/flask-rest-api:latest
